@@ -52,3 +52,21 @@
     - Shot on Goal: The puck travels directly toward the center of the opponent’s goal.
     - Paddle +: The player’s paddle increases in size by 10% for 20 seconds
     - Paddle -: The opponent’s paddle decreases in size by 10% for 20 seconds
+
+
+
+## Les outils : 
+  - Jmonkey : Moteur 3D pour la représentation du jeu en 3D
+  - Java 21
+  - Maven
+
+
+## Commandes Pour le projet : 
+
+sdk use java 21.0.10-tem
+mvn clean 
+mvn compile 
+mvn package 
+
+
+
