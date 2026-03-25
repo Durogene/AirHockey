@@ -56,17 +56,17 @@
 
 
 ## Les outils : 
-  - Jmonkey : Moteur 3D pour la représentation du jeu en 3D
-  - Java 21
-  - Maven
+  - Jmonkey : Moteur 3D pour la représentation du jeu en 3D  
+  - Java 21  
+  - Maven  
 
 
 ## Commandes Pour le projet : 
 
-sdk use java 21.0.10-tem
-mvn clean 
-mvn compile 
-mvn package 
+  - sdk use java 21.0.10-tem  
+  - mvn clean 
+  - mvn compile 
+  - mvn package 
 
 
 
