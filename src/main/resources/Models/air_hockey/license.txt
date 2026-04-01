@@ -1,0 +1,11 @@
+Model Information:
+* title:	Air Hockey
+* source:	https://sketchfab.com/3d-models/air-hockey-d5d89d567fc540349671cc2a82ef4921
+* author:	DIWAD (https://sketchfab.com/DIWAD)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Air Hockey" (https://sketchfab.com/3d-models/air-hockey-d5d89d567fc540349671cc2a82ef4921) by DIWAD (https://sketchfab.com/DIWAD) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
