@@ -29,13 +29,14 @@ public class Main extends SimpleApplication {
         Spatial model = assetManager.loadModel("Models/air_hockey_table/scene.gltf");
 
         model.scale(1f);
-        model.setLocalTranslation(0f, 0f, 0f);
+        model.setLocalTranslation(0f,   0f, 0f);
 
         rootNode.attachChild(model);
 
-        cam.setLocation(new Vector3f(0, 3, 10));
+        cam.setLocation(new Vector3f(0f, 0f, 10));
         cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(10f);
+        flyCam.setEnabled(false);
 
         /*AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White.mult(3f));
