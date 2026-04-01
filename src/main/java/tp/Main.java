@@ -33,8 +33,17 @@ public class Main extends SimpleApplication {
 
         rootNode.attachChild(model);
 
-        cam.setLocation(new Vector3f(0f, 0f, 10));
-        cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
+        // Vue en plongé pour le mode multi
+
+        /*cam.setLocation(new Vector3f(0f, 8f, 8f));
+        Vector3f position = new Vector3f(0f,0f,0f);
+        cam.lookAt(position, Vector3f.UNIT_Y);*/
+
+        // Vue pour le mode solo (ou on regarde son vis à vis)
+        // à Adapter pour l'ergonomie
+        cam.setLocation(new Vector3f(-5f, 7f, 0f));
+        Vector3f position = new Vector3f(3f,0f,0f);
+        cam.lookAt(position, Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(10f);
         flyCam.setEnabled(false);
 
