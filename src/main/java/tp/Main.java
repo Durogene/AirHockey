@@ -33,19 +33,45 @@ public class Main extends SimpleApplication {
 
         rootNode.attachChild(model);
 
+
+        // coordonnées :
+        // x droite à gauche (quand le plateau est en mode multijoueur)
+        // y en avant - en arrière
+        // z en haut en bas (par raport au plateau de jeu)
+
+
+        Spatial paddle1 = assetManager.loadModel("Models/paddle/Paddle.gltf");
+        paddle1.scale(0.004f);
+        paddle1.setLocalTranslation(-2f,0f,0f);
+        rootNode.attachChild(paddle1);
+
+
+        Spatial paddle2 = assetManager.loadModel("Models/paddle/Paddle.gltf");
+        paddle2.scale(0.004f);
+        paddle2.setLocalTranslation(3,0f,0f);
+        rootNode.attachChild(paddle2);
+
+        Spatial puck = assetManager.loadModel("Models/puck/scene.gltf");
+        puck.scale(0.03f);
+        puck.setLocalTranslation(0,0.7f,0f);
+        rootNode.attachChild(puck);
+
+
         // Vue en plongé pour le mode multi
 
-        /*cam.setLocation(new Vector3f(0f, 8f, 8f));
+        cam.setLocation(new Vector3f(0f, 8f, 8f));
         Vector3f position = new Vector3f(0f,0f,0f);
-        cam.lookAt(position, Vector3f.UNIT_Y);*/
+        cam.lookAt(position, Vector3f.UNIT_Y);
 
         // Vue pour le mode solo (ou on regarde son vis à vis)
         // à Adapter pour l'ergonomie
-        cam.setLocation(new Vector3f(-5f, 7f, 0f));
+        /*cam.setLocation(new Vector3f(-5f, 7f, 0f));
         Vector3f position = new Vector3f(3f,0f,0f);
-        cam.lookAt(position, Vector3f.UNIT_Y);
+        cam.lookAt(position, Vector3f.UNIT_Y);*/
         flyCam.setMoveSpeed(10f);
-        flyCam.setEnabled(false);
+        flyCam.setEnabled(true);
+        flyCam.setMoveSpeed(1f);
+        flyCam.setRotationSpeed(0.1f);
 
         /*AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White.mult(3f));
