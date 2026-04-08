@@ -16,12 +16,16 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.custom.ArmatureDebugAppState;
 import tp.entities.Paddle;
 import tp.entities.Puck;
+import tp.game.State;
+import tp.ui.HUD;
 
 public class AirHockeyApp extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     private Paddle paddle1, paddle2;
     private Puck puck;
+    private State state;
+    private HUD hud;
 
     //Touches de déplacement pour les 2 joueurs
     private boolean up1, down1, left1, right1; //joueur1
@@ -29,14 +33,93 @@ public class AirHockeyApp extends SimpleApplication {
 
     public float paddleSpeed = 6f; // vitesse de déplacement des paddles
 
+    private void resetPositions() {
+        paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-2f, 2f, 0f));
+        paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(2f, 2f, 0f));
+        puck.getBody().setPhysicsLocation(new Vector3f(0f, 0.77f, 0f));
+
+        puck.getBody().setLinearVelocity(Vector3f.ZERO);
+    }
+    private void showEndMessage() {
+        hud.showMessage(state.getWinnerText() + " - Appuyer sur R pour relancer la une partie");
+    }
+
+
+    // but normal joueur 1
+    public void goalForPlayer1() {
+        if (state.isGameOver()) {
+            return;
+        }
+
+        state.player1Scores();
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+
+        if (state.isGameOver()) {
+            showEndMessage();
+        } else {
+            resetPositions();
+        }
+    }
+
+    // but normal joueur 2
+    public void goalForPlayer2() {
+        if (state.isGameOver()) {
+            return;
+        }
+
+        state.player2Scores();
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+
+        if (state.isGameOver()) {
+            showEndMessage();
+        } else {
+            resetPositions();
+        }
+    }
+
+    // but  joueur 1 contre son camp
+    public void ownGoalPlayer1() {
+        if (state.isGameOver()) {
+            return;
+        }
+
+        state.player1OwnGoal();
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+
+        if (state.isGameOver()) {
+            showEndMessage();
+        } else {
+            resetPositions();
+        }
+    }
+
+    // but  joueur 2 contre son camp
+    public void ownGoalPlayer2() {
+        if (state.isGameOver()) {
+            return;
+        }
+
+        state.player2OwnGoal();
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+
+        if (state.isGameOver()) {
+            showEndMessage();
+        } else {
+            resetPositions();
+        }
+    }
+
     @Override
     public void simpleInitApp() {
         assetManager.registerLocator("/", ClasspathLocator.class);
 
         // Set up de la Physique : les raquettes et palets doivent être sur la surface de la table et ne pas la traverser
-        BulletAppState bulletAppState = new BulletAppState();
+        bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
+        state = new State();
+        hud = new HUD(assetManager, guiNode, cam);
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
         //Hitbox des objets
         bulletAppState.setDebugEnabled(true);
 
@@ -79,6 +162,10 @@ public class AirHockeyApp extends SimpleApplication {
         inputManager.addMapping("p2_Left", new KeyTrigger(KeyInput.KEY_LEFT));
         inputManager.addMapping("p2_Right", new KeyTrigger(KeyInput.KEY_RIGHT));
 
+
+        // Relancer le jeu
+        inputManager.addMapping("Restart", new KeyTrigger(KeyInput.KEY_R));
+
         com.jme3.input.controls.ActionListener actionListener = new com.jme3.input.controls.ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
@@ -110,11 +197,25 @@ public class AirHockeyApp extends SimpleApplication {
                     case "p2_Right":
                         right2 = isPressed;
                         break;
+
+                    case "Restart":
+                        if (isPressed && state.isGameOver()) {
+
+                            state.reset();
+
+                            hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+                            hud.clearMessage();
+
+                            resetPositions();
+
+                            System.out.println("Nouvelle partie !");
+                        }
+                        break;
                 }
             }
         };
 
-        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right");
+        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right", "Restart");
     }
 
         @Override
