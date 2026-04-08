@@ -26,6 +26,7 @@ public class AirHockeyApp extends SimpleApplication {
     private Puck puck;
     private State state;
     private HUD hud;
+    private int servingPlayer = (Math.random() < 0.5) ? 1 : 2;
 
     //Touches de déplacement pour les 2 joueurs
     private boolean up1, down1, left1, right1; //joueur1
@@ -33,15 +34,41 @@ public class AirHockeyApp extends SimpleApplication {
 
     public float paddleSpeed = 6f; // vitesse de déplacement des paddles
 
+    // remetre le puck en fonction du dernier qui a marque un but
     private void resetPositions() {
         paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-2f, 2f, 0f));
         paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(2f, 2f, 0f));
-        puck.getBody().setPhysicsLocation(new Vector3f(0f, 0.77f, 0f));
+
+        if (servingPlayer == 1) {
+            puck.getBody().setPhysicsLocation(new Vector3f(-1f, 0.77f, 0f));
+        } else {
+            puck.getBody().setPhysicsLocation(new Vector3f(1f, 0.77f, 0f));
+        }
 
         puck.getBody().setLinearVelocity(Vector3f.ZERO);
+        puck.getBody().setAngularVelocity(Vector3f.ZERO);
     }
+
     private void showEndMessage() {
         hud.showMessage(state.getWinnerText() + " - Appuyer sur R pour relancer la une partie");
+    }
+
+    private void updateAfterGoal() {
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+
+        if (state.isGameOver()) {
+            showEndMessage();
+        } else {
+            resetPositions();
+        }
+    }
+
+    private void restartGame() {
+        state.reset();
+        servingPlayer = (Math.random() < 0.5) ? 1 : 2;
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+        hud.clearMessage();
+        resetPositions();
     }
 
 
@@ -52,13 +79,8 @@ public class AirHockeyApp extends SimpleApplication {
         }
 
         state.player1Scores();
-        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
-
-        if (state.isGameOver()) {
-            showEndMessage();
-        } else {
-            resetPositions();
-        }
+        servingPlayer = 2;
+        updateAfterGoal();
     }
 
     // but normal joueur 2
@@ -68,13 +90,8 @@ public class AirHockeyApp extends SimpleApplication {
         }
 
         state.player2Scores();
-        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
-
-        if (state.isGameOver()) {
-            showEndMessage();
-        } else {
-            resetPositions();
-        }
+        servingPlayer = 1;
+        updateAfterGoal();
     }
 
     // but  joueur 1 contre son camp
@@ -84,13 +101,9 @@ public class AirHockeyApp extends SimpleApplication {
         }
 
         state.player1OwnGoal();
-        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+        servingPlayer = 1;
+        updateAfterGoal();
 
-        if (state.isGameOver()) {
-            showEndMessage();
-        } else {
-            resetPositions();
-        }
     }
 
     // but  joueur 2 contre son camp
@@ -100,13 +113,8 @@ public class AirHockeyApp extends SimpleApplication {
         }
 
         state.player2OwnGoal();
-        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
-
-        if (state.isGameOver()) {
-            showEndMessage();
-        } else {
-            resetPositions();
-        }
+        servingPlayer = 2;
+        updateAfterGoal();
     }
 
     @Override
@@ -200,15 +208,7 @@ public class AirHockeyApp extends SimpleApplication {
 
                     case "Restart":
                         if (isPressed && state.isGameOver()) {
-
-                            state.reset();
-
-                            hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
-                            hud.clearMessage();
-
-                            resetPositions();
-
-                            System.out.println("Nouvelle partie !");
+                            restartGame();
                         }
                         break;
                 }
