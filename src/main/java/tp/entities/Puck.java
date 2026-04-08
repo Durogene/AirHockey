@@ -19,9 +19,9 @@ public class Puck {
         rootNode.attachChild(spatial);
         this.posy=position.y;
 
-        // Cylindre plat = forme réelle d'un palet
-        CylinderCollisionShape shape = new CylinderCollisionShape(new Vector3f(0.15f, 0.03f, 0.15f), 1);
-        rigidBody = new RigidBodyControl(shape, 0.1f);
+        // Cylindre plat = forme réelle d'un palet + la masse
+        CylinderCollisionShape shape = new CylinderCollisionShape(new Vector3f(0.15f, 0.07f, 0.15f), 1);
+        rigidBody = new RigidBodyControl(shape, 100f);
         spatial.addControl(rigidBody);
         bulletAppState.getPhysicsSpace().add(rigidBody);
 
@@ -30,6 +30,8 @@ public class Puck {
         // Simule le coussin d'air : presque pas de friction, rebond élastique
         rigidBody.setFriction(0.01f);
         rigidBody.setRestitution(0.95f);
+
+        //rigidBody.setAngularFactor(0f);
     }
 
     public void update(){
