@@ -103,7 +103,6 @@ public class AirHockeyApp extends SimpleApplication {
 
 
 
-
     // but normal joueur 2
     public void goalForPlayer2() {
         if (state.isGameOver()) {
@@ -290,11 +289,38 @@ public class AirHockeyApp extends SimpleApplication {
             if (right2) direction2.x += paddleSpeed;
             paddle2.move(direction2);
 
-            //puck.update();
 
-            //System.out.println("P1  X : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().x +" Y : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().y + "Z " + paddle1.getRigidBodyPaddle().getPhysicsLocation().z);
+            // Détecter la dernière personne qui a touché le puck
+            float distP1 = puck.getBody().getPhysicsLocation().distance(paddle1.getRigidBodyPaddle().getPhysicsLocation());
+            float distP2 = puck.getBody().getPhysicsLocation().distance(paddle2.getRigidBodyPaddle().getPhysicsLocation());
+            float seuilContact = 0.3f;
+
+            if (distP1 < seuilContact) {
+                lastPlayer = 1;
+            } else if (distP2 < seuilContact) {
+                lastPlayer = 2;
+            }
+
+
+            //Si le puck est entre (-0.025 et 0.32)z et x = -1.15 ou + : but pour le joueur 1 si x=1.15 but pour joueur 2
+            if (puck.getBody().getPhysicsLocation().x<=-1.15f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.32f)){
+                if(lastPlayer==1){
+                    ownGoalPlayer1();
+                } else if (lastPlayer==2){
+                    goalForPlayer2();
+                }
+            }
+            else if (puck.getBody().getPhysicsLocation().x>=1.15f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.32f)){
+                if(lastPlayer==2){
+                    ownGoalPlayer2();
+                } else if (lastPlayer==1){
+                    goalForPlayer1();
+                }
+            }
+
+            System.out.println("P1  X : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().x +" Y : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().y + "Z " + paddle1.getRigidBodyPaddle().getPhysicsLocation().z);
             //System.out.println("paddle2 Z : " + paddle2.getRigidBodyPaddle().getPhysicsLocation().z);
-            System.out.println("Puck : X :"+ puck.getBody().getPhysicsLocation().x+" Y    : " + puck.getBody().getPhysicsLocation().y + " Z : " + puck.getBody().getPhysicsLocation().z);
+            //System.out.println("Puck : X :"+ puck.getBody().getPhysicsLocation().x+" Y    : " + puck.getBody().getPhysicsLocation().y + " Z : " + puck.getBody().getPhysicsLocation().z);
             delay(100);
         }
-    }
+}
