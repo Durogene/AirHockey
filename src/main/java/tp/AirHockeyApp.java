@@ -32,13 +32,13 @@ public class AirHockeyApp extends SimpleApplication {
 
     // remetre le puck en fonction du dernier qui a marque un but
     private void resetPositions() {
-        paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-2f, 2f, 0f));
-        paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(2f, 2f, 0f));
+        paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-1f, 0.78f, 0f));
+        paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(1f, 0.78f, 0f));
 
         if (servingPlayer == 1) {
-            puck.getBody().setPhysicsLocation(new Vector3f(-1f, 0.77f, 0f));
+            puck.getBody().setPhysicsLocation(new Vector3f(-0.6f, 0.78f, 0f));
         } else {
-            puck.getBody().setPhysicsLocation(new Vector3f(1f, 0.77f, 0f));
+            puck.getBody().setPhysicsLocation(new Vector3f(0.6f, 0.78f, 0f));
         }
 
         puck.getBody().setLinearVelocity(Vector3f.ZERO);
@@ -198,7 +198,7 @@ public class AirHockeyApp extends SimpleApplication {
         inputManager.addMapping("GoalP1", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("GoalP2", new KeyTrigger(KeyInput.KEY_H));
         inputManager.addMapping("OwnGoalP1", new KeyTrigger(KeyInput.KEY_G));
-        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_B));
 
         com.jme3.input.controls.ActionListener actionListener = new com.jme3.input.controls.ActionListener() {
             @Override

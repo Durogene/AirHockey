@@ -15,12 +15,12 @@ public class Puck {
 
     public Puck(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f position) {
         Spatial spatial = assetManager.loadModel("Models/puck/scene.gltf");
-        spatial.scale(0.03f);
+        spatial.scale(0.02f);
         rootNode.attachChild(spatial);
         this.posy=position.y;
 
         // Cylindre plat = forme réelle d'un palet + la masse
-        CylinderCollisionShape shape = new CylinderCollisionShape(new Vector3f(0.15f, 0.07f, 0.15f), 1);
+        CylinderCollisionShape shape = new CylinderCollisionShape(new Vector3f(0.1f, 0.07f, 0.1f), 1);
         rigidBody = new RigidBodyControl(shape, 100f);
         spatial.addControl(rigidBody);
         bulletAppState.getPhysicsSpace().add(rigidBody);
