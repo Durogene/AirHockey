@@ -2,12 +2,18 @@ package tp;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
+import com.jme3.font.BitmapText;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import tp.ui.Menu;
+
 
 public class Main extends SimpleApplication {
 
@@ -32,6 +38,11 @@ public class Main extends SimpleApplication {
         model.setLocalTranslation(0f,   0f, 0f);
 
         rootNode.attachChild(model);
+
+        Menu monMenu = new Menu(this);
+        monMenu.initialiserMenu();
+        setDisplayFps(false);      // Cache les FPS (60fps)
+        setDisplayStatView(false); // Cache les stats (Triangles, Vertices)
 
 
         // coordonnées :
@@ -72,6 +83,25 @@ public class Main extends SimpleApplication {
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(1f);
         flyCam.setRotationSpeed(0.1f);
+
+
+
+            // 1. Désactive le mode "vol libre" (la caméra ne bougera plus)
+            flyCam.setEnabled(false);
+
+            // 2. Si vous voulez quand même voir le curseur de la souris
+            inputManager.setCursorVisible(true);
+
+            // 3. Positionnez la caméra une fois pour toutes
+            cam.setLocation(new Vector3f(0, 15, 20)); // Reculez et montez la caméra
+            // Orientez-la vers le centre de la table
+
+            // ... le reste de votre code (chargement de la table, etc.)
+
+
+
+
+
 
         /*AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White.mult(3f));
