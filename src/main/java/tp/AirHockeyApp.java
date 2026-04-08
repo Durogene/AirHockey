@@ -11,6 +11,8 @@ import tp.entities.Puck;
 import tp.game.State;
 import tp.ui.HUD;
 
+import static com.jme3.anim.tween.Tweens.delay;
+
 public class AirHockeyApp extends SimpleApplication {
 
     private BulletAppState bulletAppState;
@@ -26,17 +28,17 @@ public class AirHockeyApp extends SimpleApplication {
     private boolean up1, down1, left1, right1; //joueur1
     private boolean up2, down2, left2, right2; //joueur2
 
-    public float paddleSpeed = 6f; // vitesse de déplacement des paddles
+    public float paddleSpeed = 2f; // vitesse de déplacement des paddles
 
     // remetre le puck en fonction du dernier qui a marque un but
     private void resetPositions() {
-        paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-2f, 2f, 0f));
-        paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(2f, 2f, 0f));
+        paddle1.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(-1f, 0.78f, 0f));
+        paddle2.getRigidBodyPaddle().setPhysicsLocation(new Vector3f(1f, 0.78f, 0f));
 
         if (servingPlayer == 1) {
-            puck.getBody().setPhysicsLocation(new Vector3f(-1f, 0.77f, 0f));
+            puck.getBody().setPhysicsLocation(new Vector3f(-0.6f, 0.78f, 0f));
         } else {
-            puck.getBody().setPhysicsLocation(new Vector3f(1f, 0.77f, 0f));
+            puck.getBody().setPhysicsLocation(new Vector3f(0.6f, 0.78f, 0f));
         }
 
         puck.getBody().setLinearVelocity(Vector3f.ZERO);
@@ -156,13 +158,13 @@ public class AirHockeyApp extends SimpleApplication {
 
         // Chargement des raquettes et du palet (paddle1, paddle2, puck)
         // Sur des positions par defaut
-        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-2f, 2f, 0f)); // y=0.76f +-
-        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(2f, 2f, 0f)); // 0.76f +-
-        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0f, 0.77f, 0f));
+        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-1f, 0.78f, 0f)); // y=0.76f +-
+        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f)); // 0.76f +-
+        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0f, 0.80f, 0f));
 
         // Vue en plongé pour le mode multi
 
-        cam.setLocation(new Vector3f(0f, 8f, 8f));
+        cam.setLocation(new Vector3f(0f, 3f, 3f));
         Vector3f position = new Vector3f(0f, 0f, 0f);
         cam.lookAt(position, Vector3f.UNIT_Y);
 
@@ -178,10 +180,10 @@ public class AirHockeyApp extends SimpleApplication {
 
         // Controles des déplacements des paddles
         //Joueur 1
-        inputManager.addMapping("p1_Up", new KeyTrigger(KeyInput.KEY_Z));
-        inputManager.addMapping("p1_Down", new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("p1_Left", new KeyTrigger(KeyInput.KEY_Q));
-        inputManager.addMapping("p1_Right", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("p1_Up", new KeyTrigger(KeyInput.KEY_I));
+        inputManager.addMapping("p1_Down", new KeyTrigger(KeyInput.KEY_K));
+        inputManager.addMapping("p1_Left", new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("p1_Right", new KeyTrigger(KeyInput.KEY_L));
 
         //Joueur 2
         inputManager.addMapping("p2_Up", new KeyTrigger(KeyInput.KEY_UP));
@@ -198,7 +200,7 @@ public class AirHockeyApp extends SimpleApplication {
         inputManager.addMapping("GoalP1", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("GoalP2", new KeyTrigger(KeyInput.KEY_H));
         inputManager.addMapping("OwnGoalP1", new KeyTrigger(KeyInput.KEY_G));
-        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_B));
 
         com.jme3.input.controls.ActionListener actionListener = new com.jme3.input.controls.ActionListener() {
             @Override
@@ -274,6 +276,7 @@ public class AirHockeyApp extends SimpleApplication {
             //Mouvement du paddle1
             Vector3f direction1 = new Vector3f(0, 0, 0);
             if (up1) direction1.z -= paddleSpeed;
+            System.out.println();
             if (down1) direction1.z += paddleSpeed;
             if (left1) direction1.x -= paddleSpeed;
             if (right1) direction1.x += paddleSpeed;
@@ -287,9 +290,11 @@ public class AirHockeyApp extends SimpleApplication {
             if (right2) direction2.x += paddleSpeed;
             paddle2.move(direction2);
 
-            System.out.println("paddle1 Y : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().y);
-            System.out.println("paddle2 Z : " + paddle2.getRigidBodyPaddle().getPhysicsLocation().z);
-            System.out.println("puck Y    : " + puck.getBody().getPhysicsLocation().y);
+            //puck.update();
 
+            //System.out.println("P1  X : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().x +" Y : " + paddle1.getRigidBodyPaddle().getPhysicsLocation().y + "Z " + paddle1.getRigidBodyPaddle().getPhysicsLocation().z);
+            //System.out.println("paddle2 Z : " + paddle2.getRigidBodyPaddle().getPhysicsLocation().z);
+            System.out.println("Puck : X :"+ puck.getBody().getPhysicsLocation().x+" Y    : " + puck.getBody().getPhysicsLocation().y + " Z : " + puck.getBody().getPhysicsLocation().z);
+            delay(100);
         }
     }
