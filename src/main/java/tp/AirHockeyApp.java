@@ -3,17 +3,9 @@ package tp;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.light.DirectionalLight;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.debug.custom.ArmatureDebugAppState;
 import tp.entities.Paddle;
 import tp.entities.Puck;
 import tp.game.State;
@@ -27,6 +19,8 @@ public class AirHockeyApp extends SimpleApplication {
     private State state;
     private HUD hud;
     private int servingPlayer = (Math.random() < 0.5) ? 1 : 2;
+    // dernier joueur qui a touché le puck
+    private int lastPlayer = 0;
 
     //Touches de déplacement pour les 2 joueurs
     private boolean up1, down1, left1, right1; //joueur1
@@ -71,6 +65,26 @@ public class AirHockeyApp extends SimpleApplication {
         resetPositions();
     }
 
+    // quand une raquette toche le puck pour savoir qui a joue en denier
+    public void setLastPlayer(int player) {
+        lastPlayer = player;
+    }
+
+    public void goalOnPlayer1Side() {
+        if (lastPlayer == 2) {
+            goalForPlayer2();
+        } else if (lastPlayer == 1) {
+            ownGoalPlayer1();
+        }
+    }
+
+    public void goalOnPlayer2Side() {
+        if (lastPlayer == 1) {
+            goalForPlayer1();
+        } else if (lastPlayer == 2) {
+            ownGoalPlayer2();
+        }
+    }
 
     // but normal joueur 1
     public void goalForPlayer1() {
@@ -82,6 +96,9 @@ public class AirHockeyApp extends SimpleApplication {
         servingPlayer = 2;
         updateAfterGoal();
     }
+
+
+
 
     // but normal joueur 2
     public void goalForPlayer2() {
