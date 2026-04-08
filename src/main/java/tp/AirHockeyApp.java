@@ -70,6 +70,7 @@ public class AirHockeyApp extends SimpleApplication {
         lastPlayer = player;
     }
 
+    // le puck est entre dans le cote du joeur 1
     public void goalOnPlayer1Side() {
         if (lastPlayer == 2) {
             goalForPlayer2();
@@ -78,6 +79,7 @@ public class AirHockeyApp extends SimpleApplication {
         }
     }
 
+    // le puck est entre dans le cote du joeur 2
     public void goalOnPlayer2Side() {
         if (lastPlayer == 1) {
             goalForPlayer1();
