@@ -174,6 +174,13 @@ public class AirHockeyApp extends SimpleApplication {
         // Relancer le jeu
         inputManager.addMapping("Restart", new KeyTrigger(KeyInput.KEY_R));
 
+
+        //test
+        inputManager.addMapping("GoalP1", new KeyTrigger(KeyInput.KEY_F));
+        inputManager.addMapping("GoalP2", new KeyTrigger(KeyInput.KEY_H));
+        inputManager.addMapping("OwnGoalP1", new KeyTrigger(KeyInput.KEY_G));
+        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_J));
+
         com.jme3.input.controls.ActionListener actionListener = new com.jme3.input.controls.ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
@@ -211,11 +218,36 @@ public class AirHockeyApp extends SimpleApplication {
                             restartGame();
                         }
                         break;
+
+                    // test
+                    case "GoalP1":
+                        if (isPressed) {
+                            goalForPlayer1();
+                        }
+                        break;
+
+                    case "GoalP2":
+                        if (isPressed) {
+                            goalForPlayer2();
+                        }
+                        break;
+
+                    case "OwnGoalP1":
+                        if (isPressed) {
+                            ownGoalPlayer1();
+                        }
+                        break;
+
+                    case "OwnGoalP2":
+                        if (isPressed) {
+                            ownGoalPlayer2();
+                        }
+                        break;
                 }
             }
         };
 
-        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right", "Restart");
+        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right", "Restart", "GoalP1", "GoalP2", "OwnGoalP1", "OwnGoalP2");
     }
 
         @Override
