@@ -16,13 +16,13 @@ public class Paddle {
 
     public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition) {
         Spatial model = assetManager.loadModel("Models/paddle/Paddle.gltf");
-        model.scale(0.004f);
+        model.scale(0.0023f);
         //model.setLocalTranslation(initialPosition);
         rootNode.attachChild(model);
 
         // Collisions pour les raquettes
-        CylinderCollisionShape paddleShape = new CylinderCollisionShape(new Vector3f(0.3f, 0.05f, 0.3f), 1);
-        rigidBodyPaddle = new RigidBodyControl(paddleShape, 1); // masse 1 pour un objet dynamique
+        CylinderCollisionShape paddleShape = new CylinderCollisionShape(new Vector3f(0.12f, 0.05f, 0.f), 1);
+        rigidBodyPaddle = new RigidBodyControl(paddleShape, 100f); // masse 1 pour un objet dynamique
         model.addControl(rigidBodyPaddle);
         bulletAppState.getPhysicsSpace().add(rigidBodyPaddle);
 
