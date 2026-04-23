@@ -14,6 +14,12 @@ public class Paddle {
 
     public RigidBodyControl rigidBodyPaddle;
 
+    // Limite de Zone de jeu des joueurs ( chaque joueurs peut se déplacer dans la moitié de son terrain)
+    // Il y a un changememnt en X et Z si on change de vue (ça fonctionne que pour la vue multijoueur)
+    public float minX, maxX; // (de -1.15 à 1.15, 0 est le centre en X)
+    public float minZ,  maxZ; // (de -0.55 à 0.55) (Pour les 2 puck)
+
+
     public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition) {
         Spatial model = assetManager.loadModel("Models/paddle/Paddle.gltf");
         model.scale(0.0023f);
@@ -27,6 +33,10 @@ public class Paddle {
         bulletAppState.getPhysicsSpace().add(rigidBodyPaddle);
 
         rigidBodyPaddle.setPhysicsLocation(initialPosition);
+
+        rigidBodyPaddle.setGravity(Vector3f.ZERO);
+        rigidBodyPaddle.setAngularFactor(0f);
+        rigidBodyPaddle.setDamping(0.9f, 1.0f);
 
 
     }

@@ -17,9 +17,9 @@
         <jme3_g>org.jmonkeyengine</jme3_g>
         <jme3_v>3.6.1-stable</jme3_v>
 
-        <maven.compiler.release>17</maven.compiler.release>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <maven.plugin.compiler.version>3.13.0</maven.plugin.compiler.version>
         <maven.plugin.javadoc.version>3.11.2</maven.plugin.javadoc.version>

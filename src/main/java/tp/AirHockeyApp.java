@@ -11,6 +11,12 @@ import tp.entities.Puck;
 import tp.game.State;
 import tp.ui.HUD;
 
+
+import com.jme3.material.Material;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Box;
+import com.jme3.math.ColorRGBA;
+
 import static com.jme3.anim.tween.Tweens.delay;
 
 public class AirHockeyApp extends SimpleApplication {
@@ -23,6 +29,9 @@ public class AirHockeyApp extends SimpleApplication {
     private int servingPlayer = (Math.random() < 0.5) ? 1 : 2;
     // dernier joueur qui a touché le puck
     private int lastPlayer = 0;
+    // Choix du mode de jeu pour le moment en brut avant l'ajout du menu pour choisir le mode de jeu
+    public enum Mode { MULTI, SOLO};
+    private Mode mode = Mode.SOLO;
 
     //Touches de déplacement pour les 2 joueurs
     private boolean up1, down1, left1, right1; //joueur1
@@ -161,21 +170,49 @@ public class AirHockeyApp extends SimpleApplication {
         paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f)); // 0.76f +-
         puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0f, 0.80f, 0f));
 
-        // Vue en plongé pour le mode multi
+        // Visualisation des Zones de but (pour débugger)
+        /*Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        m.setColor("Color", ColorRGBA.Red);
+        Geometry zoneP1 = new Geometry("zP1", new Box(0.01f, 0.1f, 0.23f));
+        zoneP1.setMaterial(m);
+        zoneP1.setLocalTranslation(-1.15f, 0.82f, 0f);
+        rootNode.attachChild(zoneP1);
 
-        cam.setLocation(new Vector3f(0f, 3f, 3f));
-        Vector3f position = new Vector3f(0f, 0f, 0f);
-        cam.lookAt(position, Vector3f.UNIT_Y);
+        Material m2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        m2.setColor("Color", ColorRGBA.Blue);
+        Geometry zoneP2 = new Geometry("zP2", new Box(0.01f, 0.1f, 0.23f));
+        zoneP2.setMaterial(m2);
+        zoneP2.setLocalTranslation(1.15f, 0.82f, 0f);
+        rootNode.attachChild(zoneP2);*/
 
-        // Vue pour le mode solo (ou on regarde son vis à vis)
-        // à Adapter pour l'ergonomie
-        /*cam.setLocation(new Vector3f(-5f, 7f, 0f));
-        Vector3f position = new Vector3f(3f,0f,0f);
-        cam.lookAt(position, Vector3f.UNIT_Y);*/
-        flyCam.setMoveSpeed(10f);
-        flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(1f);
-        flyCam.setRotationSpeed(0.1f);
+        if(Mode.MULTI == mode) {
+            // Vue en plongé pour le mode multi
+
+            cam.setLocation(new Vector3f(0f, 3f, 3f));
+            Vector3f position = new Vector3f(0f, 0f, 0f);
+            cam.lookAt(position, Vector3f.UNIT_Y);
+        }else {
+
+            // Vue pour le mode solo (ou on regarde son vis à vis)
+            // à Adapter pour l'ergonomie
+            /*cam.setLocation(new Vector3f(-5f, 7f, 0f));
+            Vector3f position = new Vector3f(3f, 0f, 0f);
+            cam.lookAt(position, Vector3f.UNIT_Y);*/
+            cam.setLocation(new Vector3f(3.5f, 2.2f, 0f));
+            Vector3f position = new Vector3f(0f, 0.78f, 0f);
+            cam.lookAt(position, Vector3f.UNIT_Y);
+
+        }
+
+        if (mode == Mode.MULTI) {
+            // Controle de la caméra pour débug mais par defaut on laisse setEnabled(false) pour pas que la caméra bouge lorsque l'on joue
+            flyCam.setMoveSpeed(10f);
+            flyCam.setEnabled(false);
+            flyCam.setMoveSpeed(1f);
+            flyCam.setRotationSpeed(0.1f);
+        }else{
+            flyCam.setEnabled(false); // on fixe la caméra pour pas qu'elle bouge lorsque l'on joue
+        }
 
         // Controles des déplacements des paddles
         //Joueur 1
@@ -234,7 +271,7 @@ public class AirHockeyApp extends SimpleApplication {
                         break;
 
                     case "Restart":
-                        if (isPressed && state.isGameOver()) {
+                        if (isPressed || state.isGameOver()) {
                             restartGame();
                         }
                         break;
@@ -274,20 +311,37 @@ public class AirHockeyApp extends SimpleApplication {
         public void simpleUpdate ( float tpf){
             //Mouvement du paddle1
             Vector3f direction1 = new Vector3f(0, 0, 0);
-            if (up1) direction1.z -= paddleSpeed;
-            System.out.println();
-            if (down1) direction1.z += paddleSpeed;
-            if (left1) direction1.x -= paddleSpeed;
-            if (right1) direction1.x += paddleSpeed;
+            if(mode==Mode.MULTI) {
+                if (up1) direction1.z -= paddleSpeed;
+                System.out.println();
+                if (down1) direction1.z += paddleSpeed;
+                if (left1) direction1.x -= paddleSpeed;
+                if (right1) direction1.x += paddleSpeed;
+            }else{
+                if (up1)    direction1.x -= paddleSpeed;
+                if (down1)  direction1.x += paddleSpeed;
+                if (left1)  direction1.z += paddleSpeed;
+                if (right1) direction1.z -= paddleSpeed;
+            }
             paddle1.move(direction1);
 
             //Mouvement du paddle2
             Vector3f direction2 = new Vector3f(0, 0, 0);
-            if (up2) direction2.z -= paddleSpeed;
-            if (down2) direction2.z += paddleSpeed;
-            if (left2) direction2.x -= paddleSpeed;
-            if (right2) direction2.x += paddleSpeed;
+            if(mode==Mode.MULTI) {
+                if (up2) direction2.z -= paddleSpeed;
+                if (down2) direction2.z += paddleSpeed;
+                if (left2) direction2.x -= paddleSpeed;
+                if (right2) direction2.x += paddleSpeed;
+            }else{
+                if (up2)    direction2.x -= paddleSpeed;
+                if (down2)  direction2.x += paddleSpeed;
+                if (left2)  direction2.z += paddleSpeed;
+                if (right2) direction2.z -= paddleSpeed;
+            }
             paddle2.move(direction2);
+
+
+            puck.update();
 
 
             // Détecter la dernière personne qui a touché le puck
@@ -302,15 +356,15 @@ public class AirHockeyApp extends SimpleApplication {
             }
 
 
-            //Si le puck est entre (-0.025 et 0.32)z et x = -1.15 ou + : but pour le joueur 1 si x=1.15 but pour joueur 2
-            if (puck.getBody().getPhysicsLocation().x<=-1.15f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.32f)){
+            //Si le puck est entre (-0.23 et 0.23)z et x = -1.17 ou + : but pour le joueur 1 si x=1.17 but pour joueur 2
+            if (puck.getBody().getPhysicsLocation().x<=-1.17f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.23f)){
                 if(lastPlayer==1){
                     ownGoalPlayer1();
                 } else if (lastPlayer==2){
                     goalForPlayer2();
                 }
             }
-            else if (puck.getBody().getPhysicsLocation().x>=1.15f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.32f)){
+            else if (puck.getBody().getPhysicsLocation().x>=1.17f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.23f)){
                 if(lastPlayer==2){
                     ownGoalPlayer2();
                 } else if (lastPlayer==1){

@@ -29,21 +29,23 @@ public class Puck {
 
         // Simule le coussin d'air : presque pas de friction, rebond élastique
         rigidBody.setFriction(0.01f);
-        rigidBody.setRestitution(0.95f);
+        //rigidBody.setRestitution(0.95f);
+        rigidBody.setRestitution(1.0f); // Lors d'une collision on conserve l'energie pour que le puck ne soit pas immobile
 
-        //rigidBody.setAngularFactor(0f);
+        rigidBody.setAngularFactor(0f);
+        rigidBody.setDamping(0f, 1.0f);
+
     }
 
     public void update(){
-        Vector3f pos= rigidBody.getPhysicsLocation();
         Vector3f velocite= rigidBody.getLinearVelocity();
-
-        // Bloque Y en position et en vitesse
-        if (pos.y != posy) {
-            rigidBody.setPhysicsLocation(new Vector3f(pos.x, posy, pos.z));
-        }
         rigidBody.setLinearVelocity(new Vector3f(velocite.x, 0f, velocite.z));
         rigidBody.setAngularVelocity(Vector3f.ZERO);
+
+        float speed = new Vector3f(velocite.x, 0f, velocite.z).length();
+        if (speed > 0.001f && speed < 0.3f) {
+            rigidBody.setLinearVelocity(new Vector3f(velocite.x, 0f, velocite.z).normalize().mult(0.5f));
+        }
     }
 
     public RigidBodyControl getBody() {

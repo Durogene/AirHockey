@@ -75,6 +75,8 @@ public class Table {
     private void addWall(Vector3f position, Vector3f halfExtents) {
         BoxCollisionShape shape = new BoxCollisionShape(halfExtents);
         RigidBodyControl wall = new RigidBodyControl(shape, 0);
+        wall.setRestitution(1.0f);
+        wall.setFriction(0f);
         Node wallNode = new Node();
         wallNode.setLocalTranslation(position);
         wallNode.addControl(wall);
