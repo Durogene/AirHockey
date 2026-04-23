@@ -17,10 +17,10 @@ public class Paddle {
     // Limite de Zone de jeu des joueurs ( chaque joueurs peut se déplacer dans la moitié de son terrain)
     // Il y a un changememnt en X et Z si on change de vue (ça fonctionne que pour la vue multijoueur)
     public float minX, maxX; // (de -1.15 à 1.15, 0 est le centre en X)
-    public float minZ,  maxZ; // (de -0.55 à 0.55) (Pour les 2 puck)
+    public float minZ=-0.50f,  maxZ=0.50f; // (de -0.50 à 0.50) (Pour les 2 puck)
 
 
-    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition) {
+    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition,float minX, float maxX) {
         Spatial model = assetManager.loadModel("Models/paddle/Paddle.gltf");
         model.scale(0.0023f);
         //model.setLocalTranslation(initialPosition);
@@ -38,11 +38,33 @@ public class Paddle {
         rigidBodyPaddle.setAngularFactor(0f);
         rigidBodyPaddle.setDamping(0.9f, 1.0f);
 
+        this.minX=minX;
+        this.maxX=maxX;
+
 
     }
 
     public void move(Vector3f velocite) {
         velocite.y = 0; // Y=0 pour ne pas faire bouger la raquette en hauteur
+        Vector3f pos = rigidBodyPaddle.getPhysicsLocation();
+        // On creer les zones de jeu pour les joueurs
+        // joueur 1 est entre -1.15 et -0.575
+        // joueur 2 est entre 0.575 et 1.15
+
+        if(pos.x<=minX && velocite.x<0){
+            velocite.x=0;
+        }
+        if(pos.x>=maxX && velocite.x>0){
+            velocite.x=0;
+        }
+
+        if(pos.z<=minZ && velocite.z<0){
+            velocite.z=0;
+        }
+        if(pos.z>=maxZ && velocite.z>0){
+            velocite.z=0;
+        }
+
         rigidBodyPaddle.setLinearVelocity(velocite);
 
         // On supprimer les rotation

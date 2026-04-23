@@ -166,9 +166,9 @@ public class AirHockeyApp extends SimpleApplication {
 
         // Chargement des raquettes et du palet (paddle1, paddle2, puck)
         // Sur des positions par defaut
-        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-1f, 0.78f, 0f)); // y=0.76f +-
-        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f)); // 0.76f +-
-        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0f, 0.80f, 0f));
+        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-1f, 0.78f, 0f),-1.10f, -0.50f); // y=0.76f +-
+        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f),0.50f, 1.10f); // 0.76f +-
+        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0.6f, 0.80f, 0f));
 
         // Visualisation des Zones de but (pour débugger)
         /*Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
