@@ -357,14 +357,14 @@ public class AirHockeyApp extends SimpleApplication {
 
 
             //Si le puck est entre (-0.23 et 0.23)z et x = -1.17 ou + : but pour le joueur 1 si x=1.17 but pour joueur 2
-            if (puck.getBody().getPhysicsLocation().x<=-1.17f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.23f)){
+            if (puck.getBody().getPhysicsLocation().x<=-1.17f && (puck.getBody().getPhysicsLocation().z>=-0.23f && puck.getBody().getPhysicsLocation().z<=0.23f)){
                 if(lastPlayer==1){
                     ownGoalPlayer1();
                 } else if (lastPlayer==2){
                     goalForPlayer2();
                 }
             }
-            else if (puck.getBody().getPhysicsLocation().x>=1.17f && (puck.getBody().getPhysicsLocation().z>=-0.025f && puck.getBody().getPhysicsLocation().z<=0.23f)){
+            else if (puck.getBody().getPhysicsLocation().x>=1.17f && (puck.getBody().getPhysicsLocation().z>=-0.23f && puck.getBody().getPhysicsLocation().z<=0.23f)){
                 if(lastPlayer==2){
                     ownGoalPlayer2();
                 } else if (lastPlayer==1){

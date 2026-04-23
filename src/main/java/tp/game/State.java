@@ -29,16 +29,16 @@ public class State {
 
     public void player1OwnGoal() {
         if (!gameOver) {
-            //scorePlayer1 = Math.max(0, scorePlayer1 - 1);
-            scorePlayer2++;
+            scorePlayer1 = Math.max(0, scorePlayer1 - 1);
+            //scorePlayer2++;
             checkWinner();
         }
     }
 
     public void player2OwnGoal() {
         if (!gameOver) {
-            //scorePlayer2 = Math.max(0, scorePlayer2 - 1);
-            scorePlayer1++;
+            scorePlayer2 = Math.max(0, scorePlayer2 - 1);
+            //scorePlayer1++;
             checkWinner();
         }
     }
