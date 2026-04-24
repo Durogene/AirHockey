@@ -171,7 +171,7 @@ public class AirHockeyApp extends SimpleApplication {
         hud = new HUD(assetManager, guiNode, cam);
         hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
         //Hitbox des objets
-        bulletAppState.setDebugEnabled(true);
+        //bulletAppState.setDebugEnabled(true);
 
         // Chargement de la Table
         Table table = new Table(assetManager, rootNode, bulletAppState);
