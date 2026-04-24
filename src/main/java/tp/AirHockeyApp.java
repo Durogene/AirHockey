@@ -17,6 +17,11 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.math.ColorRGBA;
 
+import java.util.List;
+import java.util.ArrayList;
+import tp.entities.PowerUp;
+import tp.game.Physics;
+
 import static com.jme3.anim.tween.Tweens.delay;
 
 public class AirHockeyApp extends SimpleApplication {
@@ -38,6 +43,14 @@ public class AirHockeyApp extends SimpleApplication {
     private boolean up2, down2, left2, right2; //joueur2
 
     public float paddleSpeed = 2f; // vitesse de déplacement des paddles
+
+
+    private final List<PowerUp> bonusSurTerrain  = new ArrayList<>(); // max 2 sur la table
+    private final List<PowerUp> effetsActifs     = new ArrayList<>(); // effets en cours
+    private float timerSpawnBonus  =0f;
+    private final float INTERVALLE_SPAWN=10f;
+    private final int MAX_BONUS=2;
+
 
     // remetre le puck en fonction du dernier qui a marque un but
     private void resetPositions() {
@@ -376,5 +389,77 @@ public class AirHockeyApp extends SimpleApplication {
             //System.out.println("paddle2 Z : " + paddle2.getRigidBodyPaddle().getPhysicsLocation().z);
             //System.out.println("Puck : X :"+ puck.getBody().getPhysicsLocation().x+" Y    : " + puck.getBody().getPhysicsLocation().y + " Z : " + puck.getBody().getPhysicsLocation().z);
             delay(100);
+
+
+            // Ajout de la pHysic avec les lift et les smash
+
+
+            // Physique paddle1
+            float vitessePaddle1 = paddle1.getRigidBodyPaddle().getLinearVelocity().length();
+            if (distP1 < 0.25f) {
+                if (vitessePaddle1 > 1.5f) {
+                    Vector3f dirP1 = paddle1.getRigidBodyPaddle().getLinearVelocity().normalize();
+                    Physics.appliquerSmash(puck, vitessePaddle1);
+                    Physics.appliquerLift(puck, dirP1);
+                } else if (vitessePaddle1 < 0.3f) {
+                    Physics.appliquerFlip(puck);
+                }
+            }
+
+            // Physique paddle2
+            float vitessePaddle2 = paddle2.getRigidBodyPaddle().getLinearVelocity().length();
+            if (distP2 < 0.25f) {
+                if (vitessePaddle2 > 1.5f) {
+                    Vector3f dirP2 = paddle2.getRigidBodyPaddle().getLinearVelocity().normalize();
+                    Physics.appliquerSmash(puck, vitessePaddle2);
+                    Physics.appliquerLift(puck, dirP2);
+                } else if (vitessePaddle2 < 0.3f) {
+                    Physics.appliquerFlip(puck);
+                }
+            }
+
+            // Spawn : 1 bonus toutes les 10s, max 2 sur le terrain
+            timerSpawnBonus += tpf;
+            if (timerSpawnBonus >= INTERVALLE_SPAWN && bonusSurTerrain.size() < MAX_BONUS) {
+                timerSpawnBonus = 0f;
+                PowerUp.Type[] types = PowerUp.Type.values();
+                PowerUp.Type typeAleatoire = types[(int)(Math.random() * types.length)];
+                float rx = (float)(Math.random() * 1.6f - 0.8f);
+                float rz = (float)(Math.random() * 0.8f - 0.4f);
+                bonusSurTerrain.add(new PowerUp(assetManager, rootNode, typeAleatoire, new Vector3f(rx, 0.79f, rz)));
+            }
+
+            // Collecte
+            for (int i = bonusSurTerrain.size() - 1; i >= 0; i--) {
+                PowerUp bonus = bonusSurTerrain.get(i);
+                if (puck.getBody().getPhysicsLocation().distance(bonus.getPosition()) < 0.15f) {
+                    // Vérifier si ce type est déjà actif (pas de cumul d'effet)
+                    boolean dejaActif = false;
+                    for (PowerUp effetActif : effetsActifs) {
+                        if (effetActif.getType() == bonus.getType()) {
+                            effetActif.prolongerDuree(10f); // prolonge juste le timer
+                            dejaActif = true;
+                            break;
+                        }
+                    }
+                    if (!dejaActif) {
+                        bonus.appliquerEffet(puck, paddle1, paddle2, lastPlayer);
+                        effetsActifs.add(bonus);
+                    }
+                    bonus.collecter();
+                    bonusSurTerrain.remove(i);
+                }
+            }
+
+            // Timers des effets actifs
+            for (int i = effetsActifs.size() - 1; i >= 0; i--) {
+                PowerUp effet = effetsActifs.get(i);
+                effet.mettreAJourTimer(tpf, puck, paddle1, paddle2);
+                if (effet.tempsRestant <= 0) {
+                    effetsActifs.remove(i);
+                }
+            }
+
+
         }
 }

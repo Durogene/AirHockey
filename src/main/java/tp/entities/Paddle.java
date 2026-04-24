@@ -48,8 +48,8 @@ public class Paddle {
         velocite.y = 0; // Y=0 pour ne pas faire bouger la raquette en hauteur
         Vector3f pos = rigidBodyPaddle.getPhysicsLocation();
         // On creer les zones de jeu pour les joueurs
-        // joueur 1 est entre -1.15 et -0.575
-        // joueur 2 est entre 0.575 et 1.15
+        // joueur 1 est entre -1.15 et -0.50
+        // joueur 2 est entre 0.50 et 1.15
 
         if(pos.x<=minX && velocite.x<0){
             velocite.x=0;
@@ -72,5 +72,12 @@ public class Paddle {
     }
     public RigidBodyControl getRigidBodyPaddle() {
         return rigidBodyPaddle;
+    }
+
+    private float scale = 1.0f;
+
+    public void multiplierEchelle(float facteur) {
+        scale *= facteur;
+        rigidBodyPaddle.getSpatial().setLocalScale(0.0023f * scale);
     }
 }

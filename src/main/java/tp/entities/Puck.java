@@ -51,4 +51,16 @@ public class Puck {
     public RigidBodyControl getBody() {
         return rigidBody;
     }
+
+    private float scale = 1.0f;
+
+    public void multiplierEchelle(float facteur) {
+        scale *= facteur;
+        rigidBody.getSpatial().setLocalScale(0.02f * scale);
+    }
+
+    public void multiplierVitesse(float facteur) {
+        rigidBody.setLinearVelocity(rigidBody.getLinearVelocity().mult(facteur));
+    }
+
 }
