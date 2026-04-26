@@ -289,10 +289,10 @@ public class AirHockeyApp extends SimpleApplication {
 
 
         //test
-        inputManager.addMapping("GoalP1", new KeyTrigger(KeyInput.KEY_F));
+       /* inputManager.addMapping("GoalP1", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("GoalP2", new KeyTrigger(KeyInput.KEY_H));
         inputManager.addMapping("OwnGoalP1", new KeyTrigger(KeyInput.KEY_G));
-        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_B));
+        inputManager.addMapping("OwnGoalP2", new KeyTrigger(KeyInput.KEY_B));*/
 
         com.jme3.input.controls.ActionListener actionListener = new com.jme3.input.controls.ActionListener() {
             @Override
@@ -332,7 +332,7 @@ public class AirHockeyApp extends SimpleApplication {
                         }
                         break;
 
-                    // test
+                   /* // test
                     case "GoalP1":
                         if (isPressed) {
                             goalForPlayer1();
@@ -355,12 +355,45 @@ public class AirHockeyApp extends SimpleApplication {
                         if (isPressed) {
                             ownGoalPlayer2();
                         }
-                        break;
+                        break;*/
                 }
             }
         };
 
-        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right", "Restart", "GoalP1", "GoalP2", "OwnGoalP1", "OwnGoalP2");
+        inputManager.addListener(actionListener, "p1_Up", "p1_Down", "p1_Left", "p1_Right", "p2_Up", "p2_Down", "p2_Left", "p2_Right", "Restart"/*, "GoalP1", "GoalP2", "OwnGoalP1", "OwnGoalP2"*/);
+    }
+
+    private void updateBot(float tpf) {
+        Vector3f puckPos = puck.getBody().getPhysicsLocation();
+        Vector3f botPos = paddle2.getRigidBodyPaddle().getPhysicsLocation();
+
+        Vector3f direction = new Vector3f(0, 0, 0);
+        float botSpeed = 1.3f;
+
+        // En mode SOLO, le bot est à droite de la table, donc il suit le palet sur Z
+        if (puckPos.z > botPos.z + 0.05f) {
+            direction.z = botSpeed;
+        } else if (puckPos.z < botPos.z - 0.05f) {
+            direction.z = -botSpeed;
+        }
+
+        // Il avance vers le palet seulement quand le palet est dans sa zone
+        if (puckPos.x > 0.45f) {
+            if (puckPos.x > botPos.x + 0.05f) {
+                direction.x = botSpeed;
+            } else if (puckPos.x < botPos.x - 0.05f) {
+                direction.x = -botSpeed;
+            }
+        } else {
+            // Sinon il revient défendre
+            if (botPos.x < 0.85f) {
+                direction.x = botSpeed;
+            } else if (botPos.x > 0.95f) {
+                direction.x = -botSpeed;
+            }
+        }
+
+        paddle2.move(direction);
     }
 
         @Override
@@ -387,19 +420,19 @@ public class AirHockeyApp extends SimpleApplication {
             paddle1.move(direction1);
 
             //Mouvement du paddle2
-            Vector3f direction2 = new Vector3f(0, 0, 0);
-            if(mode==Mode.MULTI) {
+
+            if (mode == Mode.SOLO) {
+                updateBot(tpf);
+            } else if (mode == Mode.MULTI) {
+                Vector3f direction2 = new Vector3f(0, 0, 0);
+
                 if (up2) direction2.z -= paddleSpeed;
                 if (down2) direction2.z += paddleSpeed;
                 if (left2) direction2.x -= paddleSpeed;
                 if (right2) direction2.x += paddleSpeed;
-            }else{
-                if (up2)    direction2.x -= paddleSpeed;
-                if (down2)  direction2.x += paddleSpeed;
-                if (left2)  direction2.z += paddleSpeed;
-                if (right2) direction2.z -= paddleSpeed;
+
+                paddle2.move(direction2);
             }
-            paddle2.move(direction2);
 
 
             puck.update();
