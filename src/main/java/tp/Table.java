@@ -12,6 +12,8 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.material.Material;
+
 
 public class Table {
 
@@ -32,6 +34,8 @@ public class Table {
         model.scale(1f);
         model.setLocalTranslation(0f, 0f, 0f);
         model.setLocalScale(1f,1f,1f);
+        //Material mat = assetManager.loadMaterial("Table.j3m");
+        //model.setMaterial(mat);
         rootNode.attachChild(model);
 
 

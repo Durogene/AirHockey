@@ -1,0 +1,16 @@
+Material PaddleMaterial : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        // On utilise la texture que tu as repérée dans Models/air_hockey/textures
+        DiffuseMap : Models/air_hockey/textures/blinn1_baseColor.jpeg
+
+        // On ajoute la NormalMap pour que les détails du modèle ressortent
+        NormalMap : Models/air_hockey/textures/blinn1_normal.png
+
+        // Réglages pour rendre la raquette brillante
+        UseMaterialColors : true
+        Ambient  : 0.5 0.5 0.5 1.0
+        Diffuse  : 1.0 0.0 0.0 1.0
+        Specular : 0.2 0.2 0.2 1.0
+        Shininess :5.0
+     }
+}

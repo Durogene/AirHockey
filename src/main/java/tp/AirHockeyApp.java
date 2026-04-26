@@ -11,6 +11,10 @@ import tp.entities.Puck;
 import tp.game.State;
 import tp.ui.HUD;
 
+import tp.ui.Menu;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+
 
 import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
@@ -51,6 +55,9 @@ public class AirHockeyApp extends SimpleApplication {
     private final float INTERVALLE_SPAWN=10f;
     private final int MAX_BONUS=2;
 
+
+    private Menu menu;
+    private boolean isMenuOpen = true;
 
     // remetre le puck en fonction du dernier qui a marque un but
     private void resetPositions() {
@@ -159,44 +166,14 @@ public class AirHockeyApp extends SimpleApplication {
         updateAfterGoal();
     }
 
-    @Override
-    public void simpleInitApp() {
-        assetManager.registerLocator("/", ClasspathLocator.class);
+    public void demarrerLeJeu(boolean multiplayer) {
+        this.isMenuOpen = false;
 
-        // Set up de la Physique : les raquettes et palets doivent être sur la surface de la table et ne pas la traverser
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
-        state = new State();
-        hud = new HUD(assetManager, guiNode, cam);
-        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
-        //Hitbox des objets
-        //bulletAppState.setDebugEnabled(true);
-
-        // Chargement de la Table
-        Table table = new Table(assetManager, rootNode, bulletAppState);
-        table.load();
-
-        // Chargement des raquettes et du palet (paddle1, paddle2, puck)
-        // Sur des positions par defaut
-        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-1f, 0.78f, 0f),-1.10f, -0.50f); // y=0.76f +-
-        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f),0.50f, 1.10f); // 0.76f +-
-        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0.6f, 0.80f, 0f));
-
-        // Visualisation des Zones de but (pour débugger)
-        /*Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        m.setColor("Color", ColorRGBA.Red);
-        Geometry zoneP1 = new Geometry("zP1", new Box(0.01f, 0.1f, 0.23f));
-        zoneP1.setMaterial(m);
-        zoneP1.setLocalTranslation(-1.15f, 0.82f, 0f);
-        rootNode.attachChild(zoneP1);
-
-        Material m2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        m2.setColor("Color", ColorRGBA.Blue);
-        Geometry zoneP2 = new Geometry("zP2", new Box(0.01f, 0.1f, 0.23f));
-        zoneP2.setMaterial(m2);
-        zoneP2.setLocalTranslation(1.15f, 0.82f, 0f);
-        rootNode.attachChild(zoneP2);*/
+        if (multiplayer) {
+            mode = Mode.MULTI;
+        } else {
+            mode = Mode.SOLO;
+        }
 
         if(Mode.MULTI == mode) {
             // Vue en plongé pour le mode multi
@@ -226,6 +203,72 @@ public class AirHockeyApp extends SimpleApplication {
         }else{
             flyCam.setEnabled(false); // on fixe la caméra pour pas qu'elle bouge lorsque l'on joue
         }
+
+        hud.afficher(guiNode);
+
+        bulletAppState.setEnabled(true);
+        bulletAppState.setDebugEnabled(false);
+
+        inputManager.setCursorVisible(false);
+        flyCam.setEnabled(false);
+    }
+
+    @Override
+    public void simpleInitApp() {
+        assetManager.registerLocator("/", ClasspathLocator.class);
+
+        // Set up de la Physique : les raquettes et palets doivent être sur la surface de la table et ne pas la traverser
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
+        state = new State();
+        hud = new HUD(assetManager, guiNode, cam);
+        hud.updateScore(state.getScorePlayer1(), state.getScorePlayer2());
+        hud.masquer();
+        //Hitbox des objets
+        //bulletAppState.setDebugEnabled(true);
+
+        // Chargement de la Table
+        Table table = new Table(assetManager, rootNode, bulletAppState);
+        table.load();
+
+        AmbientLight lumiereAmbiante = new AmbientLight();
+        lumiereAmbiante.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(lumiereAmbiante);
+
+        DirectionalLight lumiereDirectionnelle = new DirectionalLight();
+        lumiereDirectionnelle.setDirection(new Vector3f(-0.5f, -1f, -0.5f).normalizeLocal());
+        lumiereDirectionnelle.setColor(ColorRGBA.White);
+        rootNode.addLight(lumiereDirectionnelle);
+
+        // Chargement des raquettes et du palet (paddle1, paddle2, puck)
+        // Sur des positions par defaut
+        paddle1 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(-1f, 0.78f, 0f),-1.10f, -0.50f, ColorRGBA.Red); // y=0.76f +-
+        paddle2 = new Paddle(assetManager, rootNode, bulletAppState, new Vector3f(1f, 0.78f, 0f),0.50f, 1.10f, ColorRGBA.Blue); // 0.76f +-
+        puck = new Puck(assetManager, rootNode, bulletAppState, new Vector3f(0.6f, 0.80f, 0f));
+
+        bulletAppState.setEnabled(false);
+
+        menu = new Menu(this);
+        menu.initialiserMenu();
+
+        setDisplayStatView(false);
+        setDisplayFps(false);
+
+        // Visualisation des Zones de but (pour débugger)
+        /*Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        m.setColor("Color", ColorRGBA.Red);
+        Geometry zoneP1 = new Geometry("zP1", new Box(0.01f, 0.1f, 0.23f));
+        zoneP1.setMaterial(m);
+        zoneP1.setLocalTranslation(-1.15f, 0.82f, 0f);
+        rootNode.attachChild(zoneP1);
+
+        Material m2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        m2.setColor("Color", ColorRGBA.Blue);
+        Geometry zoneP2 = new Geometry("zP2", new Box(0.01f, 0.1f, 0.23f));
+        zoneP2.setMaterial(m2);
+        zoneP2.setLocalTranslation(1.15f, 0.82f, 0f);
+        rootNode.attachChild(zoneP2);*/
 
         // Controles des déplacements des paddles
         //Joueur 1
@@ -322,6 +365,11 @@ public class AirHockeyApp extends SimpleApplication {
 
         @Override
         public void simpleUpdate ( float tpf){
+
+            if (isMenuOpen) {
+                return;
+            }
+
             //Mouvement du paddle1
             Vector3f direction1 = new Vector3f(0, 0, 0);
             if(mode==Mode.MULTI) {

@@ -7,6 +7,8 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.material.Material;
+
 
 public class Puck {
 
@@ -16,6 +18,8 @@ public class Puck {
     public Puck(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f position) {
         Spatial spatial = assetManager.loadModel("Models/puck/scene.gltf");
         spatial.scale(0.02f);
+        Material mat = assetManager.loadMaterial("Puck.j3m");
+        spatial.setMaterial(mat);
         rootNode.attachChild(spatial);
         this.posy=position.y;
 

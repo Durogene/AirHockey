@@ -1,0 +1,9 @@
+Material Puck : Common/MatDefs/Light/Lighting.j3md {
+    MaterialParameters {
+        DiffuseMap : Models/puck/textures/DefaultMaterial_1001_baseColor.jpeg
+        NormalMap  : Models/puck/textures/DefaultMaterial_1001_normal.png
+        UseMaterialColors : true
+        Specular : 1.0 1.0 1.0 1.0
+        Shininess : 64.0
+    }
+}

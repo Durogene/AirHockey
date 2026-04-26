@@ -9,6 +9,8 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 
 public class Paddle {
 
@@ -20,10 +22,15 @@ public class Paddle {
     public float minZ=-0.50f,  maxZ=0.50f; // (de -0.50 à 0.50) (Pour les 2 puck)
 
 
-    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition,float minX, float maxX) {
+    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition,float minX, float maxX, ColorRGBA couleur) {
         Spatial model = assetManager.loadModel("Models/paddle/Paddle.gltf");
         model.scale(0.0023f);
         //model.setLocalTranslation(initialPosition);
+        Material mat = assetManager.loadMaterial("Paddle.j3m");
+        mat.clearParam("DiffuseMap");
+        mat.setColor("Diffuse", couleur);
+        mat.setColor("Ambient", couleur.mult(0.5f));
+        model.setMaterial(mat);
         rootNode.attachChild(model);
 
         // Collisions pour les raquettes

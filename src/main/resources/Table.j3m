@@ -1,0 +1,9 @@
+Material Table : Common/MatDefs/Light/Lighting.j3md {
+    MaterialParameters {
+        DiffuseMap : Models/air_hockey_table/textures/AHTM1_mat_baseColor.png
+        NormalMap  : Models/air_hockey_table/textures/AHTM1_mat_normal.png
+        UseMaterialColors : true
+        Specular : 0.2 0.2 0.2 1.0
+        Shininess : 5.0
+    }
+}

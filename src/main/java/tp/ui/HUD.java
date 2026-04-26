@@ -38,4 +38,14 @@ public class HUD {
     public void clearMessage() {
         messageText.setText("");
     }
+
+    public void masquer() {
+        scoreText.removeFromParent();
+        messageText.removeFromParent();
+    }
+
+    public void afficher(Node guiNode) {
+        guiNode.attachChild(scoreText);
+        guiNode.attachChild(messageText);
+    }
 }
