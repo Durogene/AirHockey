@@ -1,0 +1,10 @@
+[33m054fbfb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Correction du menu et de la camera
+[33mb542d27[m ajout fichier menu et HUD
+[33mf6fe096[m FEAT : ajout du palet et des raquette a des places arbitraires
+[33m9192e06[m Fix : .gitignore suppression des logs
+[33m4f15d75[m ADD : ajout des modèle de la raquette et du palet
+[33mce84745[m referentiel fixe et caméra desactivée
+[33m76510b9[m Fix
+[33mc3c11e9[m INIT : initialisation du projet avec les modèles 3d
+[33m9bc80c8[m Readme small changes
+[33m05d9f1b[m Update : Add commands

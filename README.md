@@ -63,7 +63,8 @@
 
 ## Commandes Pour le projet : 
 
-  - sdk use java 21.0.10-tem  
+  - sdk use java 21.0.10-tem
+  - mvn clean compile exec:java (pour lancer le projet)
   - mvn clean 
   - mvn compile 
   - mvn package 

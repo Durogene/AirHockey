@@ -6,6 +6,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -14,9 +15,18 @@ public class Paddle {
 
     public RigidBodyControl rigidBodyPaddle;
 
-    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition) {
+    // Limite de Zone de jeu des joueurs ( chaque joueurs peut se déplacer dans la moitié de son terrain)
+    // Il y a un changememnt en X et Z si on change de vue (ça fonctionne que pour la vue multijoueur)
+    public float minX, maxX; // (de -1.15 à 1.15, 0 est le centre en X)
+    public float minZ=-0.50f,  maxZ=0.50f; // (de -0.50 à 0.50) (Pour les 2 puck)
+
+
+    public Paddle(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, Vector3f initialPosition,float minX, float maxX) {
         Spatial model = assetManager.loadModel("Models/paddle/Paddle.gltf");
         model.scale(0.0023f);
+        // Dans Paddle.java
+        Material mat = assetManager.loadMaterial("Paddle.j3m");
+        model.setMaterial(mat);
         //model.setLocalTranslation(initialPosition);
         rootNode.attachChild(model);
 
@@ -28,11 +38,37 @@ public class Paddle {
 
         rigidBodyPaddle.setPhysicsLocation(initialPosition);
 
+        rigidBodyPaddle.setGravity(Vector3f.ZERO);
+        rigidBodyPaddle.setAngularFactor(0f);
+        rigidBodyPaddle.setDamping(0.9f, 1.0f);
+
+        this.minX=minX;
+        this.maxX=maxX;
+
 
     }
 
     public void move(Vector3f velocite) {
         velocite.y = 0; // Y=0 pour ne pas faire bouger la raquette en hauteur
+        Vector3f pos = rigidBodyPaddle.getPhysicsLocation();
+        // On creer les zones de jeu pour les joueurs
+        // joueur 1 est entre -1.15 et -0.50
+        // joueur 2 est entre 0.50 et 1.15
+
+        if(pos.x<=minX && velocite.x<0){
+            velocite.x=0;
+        }
+        if(pos.x>=maxX && velocite.x>0){
+            velocite.x=0;
+        }
+
+        if(pos.z<=minZ && velocite.z<0){
+            velocite.z=0;
+        }
+        if(pos.z>=maxZ && velocite.z>0){
+            velocite.z=0;
+        }
+
         rigidBodyPaddle.setLinearVelocity(velocite);
 
         // On supprimer les rotation
@@ -40,5 +76,12 @@ public class Paddle {
     }
     public RigidBodyControl getRigidBodyPaddle() {
         return rigidBodyPaddle;
+    }
+
+    private float scale = 1.0f;
+
+    public void multiplierEchelle(float facteur) {
+        scale *= facteur;
+        rigidBodyPaddle.getSpatial().setLocalScale(0.0023f * scale);
     }
 }

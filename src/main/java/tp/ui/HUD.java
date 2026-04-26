@@ -25,7 +25,20 @@ public class HUD {
         messageText.setLocalTranslation(20, cam.getHeight() - 60, 0);
         messageText.setText("");
         guiNode.attachChild(messageText);
+
     }
+    // Pour cacher le HUD au menu
+    public void masquer() {
+        scoreText.removeFromParent();
+        messageText.removeFromParent();
+    }
+
+    // Pour ré-afficher le HUD au lancement du jeu
+    public void afficher(Node guiNode) {
+        guiNode.attachChild(scoreText);
+        guiNode.attachChild(messageText);
+    }
+
 
     public void updateScore(int score1, int score2) {
         scoreText.setText("J1 : " + score1 + " | J2 : " + score2);

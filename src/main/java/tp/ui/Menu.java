@@ -7,6 +7,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
+import tp.AirHockeyApp;
 
 public class Menu {
 
@@ -93,12 +94,13 @@ public class Menu {
         // Retirer les écouteurs du menu pour ne pas interférer avec le jeu
         app.getInputManager().removeListener(actionListener);
 
-        // Optionnel : Réactiver la caméra ou la placer pour le jeu
-        // app.getFlyByCamera().setEnabled(true);
+        ((AirHockeyApp)app).demarrerLeJeu(isMultiplayer);
+
+
 
         System.out.println("Jeu lancé ! Mode Multiplayer : " + isMultiplayer);
 
-        // Ici, appelle la méthode de ta classe Main qui démarre réellement la physique/palet
-        // ex: ((Main)app).startPhysicalGame(isMultiplayer);
+
     }
+
 }

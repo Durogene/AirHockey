@@ -8,6 +8,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -32,6 +33,9 @@ public class Table {
         model.scale(1f);
         model.setLocalTranslation(0f, 0f, 0f);
         model.setLocalScale(1f,1f,1f);
+        // Dans Table.java
+        Material mat = assetManager.loadMaterial("Table.j3m");
+        model.setMaterial(mat);
         rootNode.attachChild(model);
 
 
@@ -45,12 +49,12 @@ public class Table {
 
         // Intensité de la lumière qui influe également sur la couleur du plateau
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(-1, -2, -3));
-        sun.setColor(ColorRGBA.White.mult(10f));
+        sun.setDirection(new Vector3f(-0.2f, -1.0f, -0.2f));
+        sun.setColor(ColorRGBA.White.mult(1.0f));
         rootNode.addLight(sun);
 
         AmbientLight ambient = new AmbientLight();
-        ambient.setColor(ColorRGBA.White.mult(3f));
+        ambient.setColor(ColorRGBA.White.mult(0.5f));
         rootNode.addLight(ambient);
 
         addWalls();
@@ -75,6 +79,8 @@ public class Table {
     private void addWall(Vector3f position, Vector3f halfExtents) {
         BoxCollisionShape shape = new BoxCollisionShape(halfExtents);
         RigidBodyControl wall = new RigidBodyControl(shape, 0);
+        wall.setRestitution(1.0f);
+        wall.setFriction(0f);
         Node wallNode = new Node();
         wallNode.setLocalTranslation(position);
         wallNode.addControl(wall);
